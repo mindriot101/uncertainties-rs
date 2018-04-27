@@ -221,6 +221,12 @@ impl UFloat {
         let s = power * self.n.powf(power - 1.0) * self.s;
         UFloat::new(n, s)
     }
+
+    pub fn exp(&self) -> Self {
+        let n = self.n.exp();
+        let s = n * self.s;
+        UFloat::new(n, s)
+    }
 }
 
 #[cfg(test)]
@@ -387,5 +393,12 @@ mod tests {
         let a = UFloat::new(2f64, 0.1f64);
         let res = a.powf(5.6);
         assert_ufloat_eq!(res, UFloat::new(48.50293012833273, 13.580820435933163));
+    }
+
+    #[test]
+    fn test_exp() {
+        let a = UFloat::new(2f64, 0.1f64);
+        let res = a.exp();
+        assert_ufloat_eq!(res, UFloat::new(7.38905609893065, 0.7389056098930651));
     }
 }
