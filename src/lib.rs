@@ -38,6 +38,20 @@ impl ops::Sub for UFloat {
     }
 }
 
+impl ops::Mul for UFloat {
+    type Output = UFloat;
+
+    fn mul(self, other: UFloat) -> UFloat {
+        let n = self.n * other.n;
+        let self_err = (self.s / self.n).powf(2.0);
+        let other_err = (other.s / other.n).powf(2.0);
+
+        let s = n * (self_err + other_err).sqrt();
+
+        UFloat::new(n, s)
+    }
+}
+
 #[cfg(test)]
 mod tests {
 
@@ -100,5 +114,16 @@ mod tests {
         let expected_s = (10f64.powf(2.0) + 20f64.powf(2.0) + 30f64.powf(2.0)).sqrt();
 
         assert_ufloat_eq!(res, UFloat::new(1f64, expected_s));
+    }
+
+    #[test]
+    fn test_single_multiplication() {
+        let a = UFloat::new(100f64, 10f64);
+        let b = UFloat::new(200f64, 20f64);
+        let res = a * b;
+
+        let expected_s = 2828.42712474619;
+
+        assert_ufloat_eq!(res, UFloat::new(20000f64, expected_s));
     }
 }
