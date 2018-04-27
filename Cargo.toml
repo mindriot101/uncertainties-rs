@@ -1,0 +1,9 @@
+[package]
+name = "uncertainties"
+version = "0.1.0"
+authors = ["Simon Walker <s.r.walker101@googlemail.com>"]
+
+[dependencies]
+
+[dev-dependencies]
+assert_approx_eq = "1.0.0"
