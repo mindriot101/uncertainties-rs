@@ -14,6 +14,10 @@ impl UFloat {
     fn new(n: f64, s: f64) -> Self {
         UFloat { n, s }
     }
+
+    fn fractional_err(&self) -> f64 {
+        self.s / self.n
+    }
 }
 
 impl ops::Add for UFloat {
@@ -43,10 +47,7 @@ impl ops::Mul for UFloat {
 
     fn mul(self, other: UFloat) -> UFloat {
         let n = self.n * other.n;
-        let self_err = (self.s / self.n).powf(2.0);
-        let other_err = (other.s / other.n).powf(2.0);
-
-        let s = n * (self_err + other_err).sqrt();
+        let s = n * (self.fractional_err().powf(2.0) + other.fractional_err().powf(2.0)).sqrt();
 
         UFloat::new(n, s)
     }
