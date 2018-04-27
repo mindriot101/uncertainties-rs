@@ -20,6 +20,8 @@ impl UFloat {
     }
 }
 
+/* Addition */
+
 impl ops::Add for UFloat {
     type Output = UFloat;
 
@@ -30,6 +32,41 @@ impl ops::Add for UFloat {
         UFloat::new(n, s)
     }
 }
+
+impl<'a> ops::Add for &'a UFloat {
+    type Output = UFloat;
+
+    fn add(self, other: &'a UFloat) -> UFloat {
+        let n = self.n + other.n;
+        let s = (self.s * self.s + other.s * other.s).sqrt();
+
+        UFloat::new(n, s)
+    }
+}
+
+impl<'a> ops::Add<UFloat> for &'a UFloat {
+    type Output = UFloat;
+
+    fn add(self, other: UFloat) -> UFloat {
+        let n = self.n + other.n;
+        let s = (self.s * self.s + other.s * other.s).sqrt();
+
+        UFloat::new(n, s)
+    }
+}
+
+impl<'a> ops::Add<&'a UFloat> for UFloat {
+    type Output = UFloat;
+
+    fn add(self, other: &'a UFloat) -> UFloat {
+        let n = self.n + other.n;
+        let s = (self.s * self.s + other.s * other.s).sqrt();
+
+        UFloat::new(n, s)
+    }
+}
+
+/* Subtraction */
 
 impl ops::Sub for UFloat {
     type Output = UFloat;
@@ -42,6 +79,41 @@ impl ops::Sub for UFloat {
     }
 }
 
+impl<'a> ops::Sub for &'a UFloat {
+    type Output = UFloat;
+
+    fn sub(self, other: &'a UFloat) -> UFloat {
+        let n = self.n - other.n;
+        let s = (self.s * self.s + other.s * other.s).sqrt();
+
+        UFloat::new(n, s)
+    }
+}
+
+impl<'a> ops::Sub<UFloat> for &'a UFloat {
+    type Output = UFloat;
+
+    fn sub(self, other: UFloat) -> UFloat {
+        let n = self.n - other.n;
+        let s = (self.s * self.s + other.s * other.s).sqrt();
+
+        UFloat::new(n, s)
+    }
+}
+
+impl<'a> ops::Sub<&'a UFloat> for UFloat {
+    type Output = UFloat;
+
+    fn sub(self, other: &'a UFloat) -> UFloat {
+        let n = self.n - other.n;
+        let s = (self.s * self.s + other.s * other.s).sqrt();
+
+        UFloat::new(n, s)
+    }
+}
+
+/* Multiplication */
+
 impl ops::Mul for UFloat {
     type Output = UFloat;
 
@@ -53,10 +125,78 @@ impl ops::Mul for UFloat {
     }
 }
 
+impl<'a> ops::Mul for &'a UFloat {
+    type Output = UFloat;
+
+    fn mul(self, other: &'a UFloat) -> UFloat {
+        let n = self.n * other.n;
+        let s = n * (self.fractional_err().powf(2.0) + other.fractional_err().powf(2.0)).sqrt();
+
+        UFloat::new(n, s)
+    }
+}
+
+impl<'a> ops::Mul<UFloat> for &'a UFloat {
+    type Output = UFloat;
+
+    fn mul(self, other: UFloat) -> UFloat {
+        let n = self.n * other.n;
+        let s = n * (self.fractional_err().powf(2.0) + other.fractional_err().powf(2.0)).sqrt();
+
+        UFloat::new(n, s)
+    }
+}
+
+impl<'a> ops::Mul<&'a UFloat> for UFloat {
+    type Output = UFloat;
+
+    fn mul(self, other: &'a UFloat) -> UFloat {
+        let n = self.n * other.n;
+        let s = n * (self.fractional_err().powf(2.0) + other.fractional_err().powf(2.0)).sqrt();
+
+        UFloat::new(n, s)
+    }
+}
+
+/* Division */
+
 impl ops::Div for UFloat {
     type Output = UFloat;
 
     fn div(self, other: UFloat) -> UFloat {
+        let n = self.n / other.n;
+        let s = n * (self.fractional_err().powf(2.0) + other.fractional_err().powf(2.0)).sqrt();
+
+        UFloat::new(n, s)
+    }
+}
+
+impl<'a> ops::Div for &'a UFloat {
+    type Output = UFloat;
+
+    fn div(self, other: &'a UFloat) -> UFloat {
+        let n = self.n / other.n;
+        let s = n * (self.fractional_err().powf(2.0) + other.fractional_err().powf(2.0)).sqrt();
+
+        UFloat::new(n, s)
+    }
+}
+
+impl<'a> ops::Div<UFloat> for &'a UFloat {
+    type Output = UFloat;
+
+    fn div(self, other: UFloat) -> UFloat {
+        let n = self.n / other.n;
+        let s = n * (self.fractional_err().powf(2.0) + other.fractional_err().powf(2.0)).sqrt();
+
+        UFloat::new(n, s)
+    }
+}
+
+impl<'a> ops::Div<&'a UFloat> for UFloat {
+    type Output = UFloat;
+
+    fn div(self, other: &'a UFloat) -> UFloat {
         let n = self.n / other.n;
         let s = n * (self.fractional_err().powf(2.0) + other.fractional_err().powf(2.0)).sqrt();
 
@@ -172,5 +312,27 @@ mod tests {
         let expected_s = 1.1358360166811596;
 
         assert_ufloat_eq!(res, UFloat::new(1.6666666666666667, expected_s));
+    }
+
+    #[test]
+    fn test_ref_addition() {
+        let a = UFloat::new(1f64, 10f64);
+        let b = UFloat::new(1f64, 20f64);
+        let res = &a + &b;
+
+        let expected_s = (10f64.powf(2.0) + 20f64.powf(2.0)).sqrt();
+
+        assert_ufloat_eq!(res, UFloat::new(2f64, expected_s));
+    }
+
+    #[test]
+    fn test_ref_subtraction() {
+        let a = UFloat::new(2f64, 10f64);
+        let b = UFloat::new(1f64, 20f64);
+        let res = &a - &b;
+
+        let expected_s = (10f64.powf(2.0) + 20f64.powf(2.0)).sqrt();
+
+        assert_ufloat_eq!(res, UFloat::new(1f64, expected_s));
     }
 }
