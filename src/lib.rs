@@ -23,7 +23,7 @@ impl UFloat {
 
 impl fmt::Display for UFloat {
     fn fmt(&self, f: &mut fmt::Formatter) -> Result<(), fmt::Error> {
-        write!(f, "{:.4}+/-{:.4}", self.n, self.s)
+        write!(f, "{}+/-{}", self.n, self.s)
     }
 }
 
@@ -345,8 +345,8 @@ mod tests {
 
     #[test]
     fn test_display() {
-        let a = UFloat::new(2f64, 10f64);
+        let a = UFloat::new(2.6f64, 10.3f64);
         let text = format!("{}", a);
-        assert_eq!(text, "2.0000+/-10.0000");
+        assert_eq!(text, "2.6+/-10.3");
     }
 }
