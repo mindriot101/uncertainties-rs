@@ -2,6 +2,7 @@
 #[macro_use]
 extern crate assert_approx_eq;
 
+use std::fmt;
 use std::ops;
 
 #[derive(Default, Debug)]
@@ -17,6 +18,12 @@ impl UFloat {
 
     fn fractional_err(&self) -> f64 {
         self.s / self.n
+    }
+}
+
+impl fmt::Display for UFloat {
+    fn fmt(&self, f: &mut fmt::Formatter) -> Result<(), fmt::Error> {
+        write!(f, "{:.4}+/-{:.4}", self.n, self.s)
     }
 }
 
@@ -334,5 +341,12 @@ mod tests {
         let expected_s = (10f64.powf(2.0) + 20f64.powf(2.0)).sqrt();
 
         assert_ufloat_eq!(res, UFloat::new(1f64, expected_s));
+    }
+
+    #[test]
+    fn test_display() {
+        let a = UFloat::new(2f64, 10f64);
+        let text = format!("{}", a);
+        assert_eq!(text, "2.0000+/-10.0000");
     }
 }
