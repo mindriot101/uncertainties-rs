@@ -46,11 +46,25 @@ mod tests {
     }
 
     #[test]
-    fn test_addition() {
+    fn test_single_addition() {
         let a = UFloat::new(1f64, 10f64);
         let b = UFloat::new(1f64, 20f64);
         let res = a + b;
 
-        assert_ufloat_eq!(res, UFloat::new(2f64, 22.360679775f64));
+        let expected_s = (10f64.powf(2.0) + 20f64.powf(2.0)).sqrt();
+
+        assert_ufloat_eq!(res, UFloat::new(2f64, expected_s));
+    }
+
+    #[test]
+    fn test_multiple_addition() {
+        let a = UFloat::new(1f64, 10f64);
+        let b = UFloat::new(1f64, 20f64);
+        let c = UFloat::new(1f64, 30f64);
+        let res = a + b + c;
+
+        let expected_s = (10f64.powf(2.0) + 20f64.powf(2.0) + 30f64.powf(2.0)).sqrt();
+
+        assert_ufloat_eq!(res, UFloat::new(3f64, expected_s));
     }
 }
