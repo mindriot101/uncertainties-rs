@@ -185,6 +185,16 @@ impl<'a> ops::Div<&'a UFloat> for UFloat {
     }
 }
 
+/* Operators */
+impl UFloat {
+    pub fn sin(&self) -> Self {
+        let n = self.n.sin();
+        let s = (self.n.cos() * self.s).abs();
+
+        UFloat::new(n, s)
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -314,5 +324,12 @@ mod tests {
         let expected_s = (10f64.powf(2.0) + 20f64.powf(2.0)).sqrt();
 
         assert_ufloat_eq!(res, UFloat::new(1f64, expected_s));
+    }
+
+    #[test]
+    fn test_sin() {
+        let a = UFloat::new(2f64, 0.1f64);
+        let res = a.sin();
+        assert_ufloat_eq!(res, UFloat::new(0.9092974268256817, 0.04161468365471424));
     }
 }
