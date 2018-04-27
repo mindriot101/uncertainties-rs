@@ -201,18 +201,19 @@ impl UFloat {
         UFloat::new(n, s)
     }
 
-    pub fn ln(&self) -> Self {
-        let n = self.n.ln();
-        let s = self.s / self.n;
-
+    pub fn log(&self, base: f64) -> Self {
+        let n = self.n.log(base);
+        let s = self.s / (self.n * base.ln());
         UFloat::new(n, s)
     }
 
-    pub fn log10(&self) -> Self {
-        let n = self.n.log10();
-        let s = self.s / (self.n * 10.0f64.ln());
+    pub fn ln(&self) -> Self {
+        use std::f64::consts::E;
+        self.log(E)
+    }
 
-        UFloat::new(n, s)
+    pub fn log10(&self) -> Self {
+        self.log(10.0)
     }
 }
 
