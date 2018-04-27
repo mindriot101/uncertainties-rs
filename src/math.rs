@@ -200,6 +200,20 @@ impl UFloat {
 
         UFloat::new(n, s)
     }
+
+    pub fn ln(&self) -> Self {
+        let n = self.n.ln();
+        let s = self.s / self.n;
+
+        UFloat::new(n, s)
+    }
+
+    pub fn log10(&self) -> Self {
+        let n = self.n.log10();
+        let s = self.s / (self.n * 10.0f64.ln());
+
+        UFloat::new(n, s)
+    }
 }
 
 #[cfg(test)]
@@ -345,5 +359,19 @@ mod tests {
         let a = UFloat::new(2f64, 0.1f64);
         let res = a.cos();
         assert_ufloat_eq!(res, UFloat::new(-0.4161468365471424, 0.09092974268256818));
+    }
+
+    #[test]
+    fn test_ln() {
+        let a = UFloat::new(2f64, 0.1f64);
+        let res = a.ln();
+        assert_ufloat_eq!(res, UFloat::new(0.6931471805599453, 0.05));
+    }
+
+    #[test]
+    fn test_log10() {
+        let a = UFloat::new(2f64, 0.1f64);
+        let res = a.log10();
+        assert_ufloat_eq!(res, UFloat::new(0.3010299956639812, 0.02171472409516259));
     }
 }
