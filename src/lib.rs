@@ -53,6 +53,17 @@ impl ops::Mul for UFloat {
     }
 }
 
+impl ops::Div for UFloat {
+    type Output = UFloat;
+
+    fn div(self, other: UFloat) -> UFloat {
+        let n = self.n / other.n;
+        let s = n * (self.fractional_err().powf(2.0) + other.fractional_err().powf(2.0)).sqrt();
+
+        UFloat::new(n, s)
+    }
+}
+
 #[cfg(test)]
 mod tests {
 
@@ -138,5 +149,28 @@ mod tests {
         let expected_s = 4089.0096600521747;
 
         assert_ufloat_eq!(res, UFloat::new(6000f64, expected_s));
+    }
+
+    #[test]
+    fn test_single_division() {
+        let a = UFloat::new(100f64, 10f64);
+        let b = UFloat::new(200f64, 20f64);
+        let res = a / b;
+
+        let expected_s = 0.07071067811865477;
+
+        assert_ufloat_eq!(res, UFloat::new(0.5, expected_s));
+    }
+
+    #[test]
+    fn test_multiple_division() {
+        let a = UFloat::new(100f64, 10f64);
+        let b = UFloat::new(200f64, 20f64);
+        let c = UFloat::new(0.3f64, 0.2f64);
+        let res = a / b / c;
+
+        let expected_s = 1.1358360166811596;
+
+        assert_ufloat_eq!(res, UFloat::new(1.6666666666666667, expected_s));
     }
 }
