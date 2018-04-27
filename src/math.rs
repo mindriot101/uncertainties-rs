@@ -193,6 +193,13 @@ impl UFloat {
 
         UFloat::new(n, s)
     }
+
+    pub fn cos(&self) -> Self {
+        let n = self.n.cos();
+        let s = (self.n.sin() * self.s).abs();
+
+        UFloat::new(n, s)
+    }
 }
 
 #[cfg(test)]
@@ -331,5 +338,12 @@ mod tests {
         let a = UFloat::new(2f64, 0.1f64);
         let res = a.sin();
         assert_ufloat_eq!(res, UFloat::new(0.9092974268256817, 0.04161468365471424));
+    }
+
+    #[test]
+    fn test_cos() {
+        let a = UFloat::new(2f64, 0.1f64);
+        let res = a.cos();
+        assert_ufloat_eq!(res, UFloat::new(-0.4161468365471424, 0.09092974268256818));
     }
 }
