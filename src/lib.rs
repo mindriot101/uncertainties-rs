@@ -27,6 +27,17 @@ impl ops::Add for UFloat {
     }
 }
 
+impl ops::Sub for UFloat {
+    type Output = UFloat;
+
+    fn sub(self, other: UFloat) -> UFloat {
+        let n = self.n - other.n;
+        let s = (self.s * self.s + other.s * other.s).sqrt();
+
+        UFloat::new(n, s)
+    }
+}
+
 #[cfg(test)]
 mod tests {
 
@@ -66,5 +77,28 @@ mod tests {
         let expected_s = (10f64.powf(2.0) + 20f64.powf(2.0) + 30f64.powf(2.0)).sqrt();
 
         assert_ufloat_eq!(res, UFloat::new(3f64, expected_s));
+    }
+
+    #[test]
+    fn test_single_subtraction() {
+        let a = UFloat::new(2f64, 10f64);
+        let b = UFloat::new(1f64, 20f64);
+        let res = a - b;
+
+        let expected_s = (10f64.powf(2.0) + 20f64.powf(2.0)).sqrt();
+
+        assert_ufloat_eq!(res, UFloat::new(1f64, expected_s));
+    }
+
+    #[test]
+    fn test_multiple_subtraction() {
+        let a = UFloat::new(3f64, 10f64);
+        let b = UFloat::new(1f64, 20f64);
+        let c = UFloat::new(1f64, 30f64);
+        let res = a - b - c;
+
+        let expected_s = (10f64.powf(2.0) + 20f64.powf(2.0) + 30f64.powf(2.0)).sqrt();
+
+        assert_ufloat_eq!(res, UFloat::new(1f64, expected_s));
     }
 }
