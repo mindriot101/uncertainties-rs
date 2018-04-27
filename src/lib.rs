@@ -127,4 +127,16 @@ mod tests {
 
         assert_ufloat_eq!(res, UFloat::new(20000f64, expected_s));
     }
+
+    #[test]
+    fn test_multiple_multiplication() {
+        let a = UFloat::new(100f64, 10f64);
+        let b = UFloat::new(200f64, 20f64);
+        let c = UFloat::new(0.3f64, 0.2f64);
+        let res = a * b * c;
+
+        let expected_s = 4089.0096600521747;
+
+        assert_ufloat_eq!(res, UFloat::new(6000f64, expected_s));
+    }
 }
